@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using static System.Net.WebRequestMethods;
 
 //[ExecuteAlways]
 public class FrustrumCreator : MonoBehaviour
@@ -12,6 +14,9 @@ public class FrustrumCreator : MonoBehaviour
 
         public Vector3 normal;
     }
+
+    public Transform centerNear;
+    public Transform centerFar;
 
     public FrustumPlane nearPlane = new FrustumPlane();
     public FrustumPlane farPlane = new FrustumPlane();
@@ -67,20 +72,67 @@ public class FrustrumCreator : MonoBehaviour
 
         nearCenter = transform.position + transform.forward * nearDist;
         farCenter = transform.position + transform.forward * farDist;
+        centerNear.transform.position = nearCenter;
+        centerFar.transform.position = farCenter;
 
-        //Calculo las posiciones de los vértices del near plane
-        nearUpLeftV = new Vector3(Mathf.Tan((-fov / 2) * Mathf.Deg2Rad) * nearDist + nearCenter.x, Mathf.Tan((vFov / 2) * Mathf.Deg2Rad) * nearDist + nearCenter.y, nearCenter.z);
-        nearUpRightV = new Vector3(Mathf.Tan((fov / 2) * Mathf.Deg2Rad) * nearDist + nearCenter.x, Mathf.Tan((vFov / 2) * Mathf.Deg2Rad) * nearDist + nearCenter.y, nearCenter.z);
-        nearDownLeftV = new Vector3(Mathf.Tan((-fov / 2) * Mathf.Deg2Rad) * nearDist + nearCenter.x, Mathf.Tan((-vFov / 2) * Mathf.Deg2Rad) * nearDist + nearCenter.y, nearCenter.z);
-        nearDownRightV = new Vector3(Mathf.Tan((fov / 2) * Mathf.Deg2Rad) * nearDist + nearCenter.x, Mathf.Tan((-vFov / 2) * Mathf.Deg2Rad) * nearDist + nearCenter.y, nearCenter.z);
+        ////Calculo las posiciones de los vértices del near plane
+        //nearUpLeftV = new Vector3(Mathf.Tan((fov / 2) * Mathf.Deg2Rad) * nearDist + nearCenter.x, Mathf.Tan((vFov / 2) * Mathf.Deg2Rad) * nearDist + nearCenter.y, nearCenter.z);
+        //nearUpRightV = new Vector3(Mathf.Tan((fov / 2) * Mathf.Deg2Rad) * nearDist + nearCenter.x, Mathf.Tan((vFov / 2) * Mathf.Deg2Rad) * nearDist + nearCenter.y, nearCenter.z);
+        //nearDownLeftV = new Vector3(Mathf.Tan((fov / 2) * Mathf.Deg2Rad) * nearDist + nearCenter.x, Mathf.Tan((-vFov / 2) * Mathf.Deg2Rad) * nearDist + nearCenter.y, nearCenter.z);
+        //nearDownRightV = new Vector3(Mathf.Tan((fov / 2) * Mathf.Deg2Rad) * nearDist + nearCenter.x, Mathf.Tan((-vFov / 2) * Mathf.Deg2Rad) * nearDist + nearCenter.y, nearCenter.z);
 
-        //Calculo las posiciones de los vértices del far plane
-        farUpLeftV = new Vector3(Mathf.Tan((-fov / 2) * Mathf.Deg2Rad) * farDist + farCenter.x, Mathf.Tan((vFov / 2) * Mathf.Deg2Rad) * farDist + farCenter.y, farCenter.z);
-        farUpRightV = new Vector3(Mathf.Tan((fov / 2) * Mathf.Deg2Rad) * farDist + farCenter.x, Mathf.Tan((vFov / 2) * Mathf.Deg2Rad) * farDist + farCenter.y, farCenter.z);
-        farDownLeftV = new Vector3(Mathf.Tan((-fov / 2) * Mathf.Deg2Rad) * farDist + farCenter.x, Mathf.Tan((-vFov / 2) * Mathf.Deg2Rad) * farDist + farCenter.y, farCenter.z);
-        farDownRightV = new Vector3(Mathf.Tan((fov / 2) * Mathf.Deg2Rad) * farDist + farCenter.x, Mathf.Tan((-vFov / 2) * Mathf.Deg2Rad) * farDist + farCenter.y, farCenter.z);
+        ////Calculo las posiciones de los vértices del far plane
+        //farUpLeftV = new Vector3(Mathf.Tan((fov / 2) * Mathf.Deg2Rad) * farDist + farCenter.x, Mathf.Tan((vFov / 2) * Mathf.Deg2Rad) * farDist + farCenter.y, farCenter.z);
+        //farUpRightV = new Vector3(Mathf.Tan((fov / 2) * Mathf.Deg2Rad) * farDist + farCenter.x, Mathf.Tan((vFov / 2) * Mathf.Deg2Rad) * farDist + farCenter.y, farCenter.z);
+        //farDownLeftV = new Vector3(Mathf.Tan((fov / 2) * Mathf.Deg2Rad) * farDist + farCenter.x, Mathf.Tan((-vFov / 2) * Mathf.Deg2Rad) * farDist + farCenter.y, farCenter.z);
+        //farDownRightV = new Vector3(Mathf.Tan((fov / 2) * Mathf.Deg2Rad) * farDist + farCenter.x, Mathf.Tan((-vFov / 2) * Mathf.Deg2Rad) * farDist + farCenter.y, farCenter.z);
 
+        UpdatePoints();
         CheckObsjectsInFrustum();
+    }
+
+    void UpdatePoints()
+    {
+        Vector3 up = transform.up;
+        Vector3 right = transform.right;
+
+        float nearPlaneHeight = Mathf.Tan((vFov) * Mathf.Deg2Rad) * nearDist;
+        float nearPlaneWidth = Mathf.Tan((fov) * Mathf.Deg2Rad) * nearDist;
+        
+        float farPlaneHeight = Mathf.Tan((vFov) * Mathf.Deg2Rad) * farDist;
+        float farPlaneWidth = Mathf.Tan((fov) * Mathf.Deg2Rad) * farDist;
+
+        nearUpLeftV.x = nearCenter.x + (up.x * nearPlaneHeight / 2) - (right.x * nearPlaneWidth / 2);
+        nearUpLeftV.y = nearCenter.y + (up.y * nearPlaneHeight / 2) - (right.y * nearPlaneWidth / 2);
+        nearUpLeftV.z = nearCenter.z + (up.z * nearPlaneHeight / 2) - (right.z * nearPlaneWidth / 2);
+
+        nearUpRightV.x = nearCenter.x + (up.x * nearPlaneHeight / 2) + (right.x * nearPlaneWidth / 2);
+        nearUpRightV.y = nearCenter.y + (up.y * nearPlaneHeight / 2) + (right.y * nearPlaneWidth / 2);
+        nearUpRightV.z = nearCenter.z + (up.z * nearPlaneHeight / 2) + (right.z * nearPlaneWidth / 2);
+
+        nearDownLeftV.x = nearCenter.x - (up.x * nearPlaneHeight / 2) - (right.x * nearPlaneWidth / 2);
+        nearDownLeftV.y = nearCenter.y - (up.y * nearPlaneHeight / 2) - (right.y * nearPlaneWidth / 2);
+        nearDownLeftV.z = nearCenter.z - (up.z * nearPlaneHeight / 2) - (right.z * nearPlaneWidth / 2);
+
+        nearDownRightV.x = nearCenter.x - (up.x * nearPlaneHeight / 2) + (right.x * nearPlaneWidth / 2);
+        nearDownRightV.y = nearCenter.y - (up.y * nearPlaneHeight / 2) + (right.y * nearPlaneWidth / 2);
+        nearDownRightV.z = nearCenter.z - (up.z * nearPlaneHeight / 2) + (right.z * nearPlaneWidth / 2);
+
+        farUpLeftV.x = farCenter.x + (up.x * farPlaneHeight / 2) - (right.x * farPlaneWidth / 2);
+        farUpLeftV.y = farCenter.y + (up.y * farPlaneHeight / 2) - (right.y * farPlaneWidth / 2);
+        farUpLeftV.z = farCenter.z + (up.z * farPlaneHeight / 2) - (right.z * farPlaneWidth / 2);
+
+        farUpRightV.x = farCenter.x + (up.x * farPlaneHeight / 2) + (right.x * farPlaneWidth / 2);
+        farUpRightV.y = farCenter.y + (up.y * farPlaneHeight / 2) + (right.y * farPlaneWidth / 2);
+        farUpRightV.z = farCenter.z + (up.z * farPlaneHeight / 2) + (right.z * farPlaneWidth / 2);
+
+        farDownLeftV.x = farCenter.x - (up.x * farPlaneHeight / 2) - (right.x * farPlaneWidth / 2);
+        farDownLeftV.y = farCenter.y - (up.y * farPlaneHeight / 2) - (right.y * farPlaneWidth / 2);
+        farDownLeftV.z = farCenter.z - (up.z * farPlaneHeight / 2) - (right.z * farPlaneWidth / 2);
+
+        farDownRightV.x = farCenter.x - (up.x * farPlaneHeight / 2) + (right.x * farPlaneWidth / 2);
+        farDownRightV.y = farCenter.y - (up.y * farPlaneHeight / 2) + (right.y * farPlaneWidth / 2);
+        farDownRightV.z = farCenter.z - (up.z * farPlaneHeight / 2) + (right.z * farPlaneWidth / 2);
     }
 
     void AddVerticesToList()
