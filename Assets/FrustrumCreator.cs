@@ -63,17 +63,17 @@ public class FrustrumCreator : MonoBehaviour
 
     void Update()
     {
+        aspectRatio = (float)screenWidth / (float)screenHeight;
+        vFov = fov / aspectRatio;
+
+        UpdatePoints();
         UpdateVertex();
         UpdatePlanes();
 
-        aspectRatio = (float)screenWidth / (float)screenHeight;
-
-        vFov = fov / aspectRatio;
-
-        nearCenter = transform.position + transform.forward * nearDist;
-        farCenter = transform.position + transform.forward * farDist;
-        centerNear.transform.position = nearCenter;
-        centerFar.transform.position = farCenter;
+        //nearCenter = transform.position + transform.forward * nearDist;
+        //farCenter = transform.position + transform.forward * farDist;
+        //centerNear.transform.position = nearCenter;
+        //centerFar.transform.position = farCenter;
 
         ////Calculo las posiciones de los vértices del near plane
         //nearUpLeftV = new Vector3(Mathf.Tan((fov / 2) * Mathf.Deg2Rad) * nearDist + nearCenter.x, Mathf.Tan((vFov / 2) * Mathf.Deg2Rad) * nearDist + nearCenter.y, nearCenter.z);
@@ -87,7 +87,6 @@ public class FrustrumCreator : MonoBehaviour
         //farDownLeftV = new Vector3(Mathf.Tan((fov / 2) * Mathf.Deg2Rad) * farDist + farCenter.x, Mathf.Tan((-vFov / 2) * Mathf.Deg2Rad) * farDist + farCenter.y, farCenter.z);
         //farDownRightV = new Vector3(Mathf.Tan((fov / 2) * Mathf.Deg2Rad) * farDist + farCenter.x, Mathf.Tan((-vFov / 2) * Mathf.Deg2Rad) * farDist + farCenter.y, farCenter.z);
 
-        UpdatePoints();
         CheckObsjectsInFrustum();
     }
 
@@ -96,12 +95,22 @@ public class FrustrumCreator : MonoBehaviour
         Vector3 up = transform.up;
         Vector3 right = transform.right;
 
+        nearCenter = transform.position + transform.forward * nearDist;
+        farCenter = transform.position + transform.forward * farDist;
+
+        //Los cubos en los centros de los planos far and near
+        centerNear.transform.position = nearCenter;
+        centerFar.transform.position = farCenter;
+
         float nearPlaneHeight = Mathf.Tan((vFov) * Mathf.Deg2Rad) * nearDist;
         float nearPlaneWidth = Mathf.Tan((fov) * Mathf.Deg2Rad) * nearDist;
         
         float farPlaneHeight = Mathf.Tan((vFov) * Mathf.Deg2Rad) * farDist;
         float farPlaneWidth = Mathf.Tan((fov) * Mathf.Deg2Rad) * farDist;
 
+        //Up, Right y Forward son vectores3 que van desde el 0 del objeto hasta un punto. Cuando yo roto mi figura el punto al que se dirige cada vector también cambia, y no mantiene el 1
+        //en una sola coordenada determinada (x=right, y=up, z=forward), sino que cada uno puede tener valores en las 3 coordenadas a la vez (con la magnitud siendo 1).
+        //Usando el transform.up y el transform.right ademas del forward de antes para conseguir los vertices logro tener las posiciones relativas al objeto, no del ambito global
         nearUpLeftV.x = nearCenter.x + (up.x * nearPlaneHeight / 2) - (right.x * nearPlaneWidth / 2);
         nearUpLeftV.y = nearCenter.y + (up.y * nearPlaneHeight / 2) - (right.y * nearPlaneWidth / 2);
         nearUpLeftV.z = nearCenter.z + (up.z * nearPlaneHeight / 2) - (right.z * nearPlaneWidth / 2);
