@@ -111,37 +111,54 @@ public class FrustrumCreator : MonoBehaviour
         //Up, Right y Forward son vectores3 que van desde el 0 del objeto hasta un punto. Cuando yo roto mi figura el punto al que se dirige cada vector también cambia, y no mantiene el 1
         //en una sola coordenada determinada (x=right, y=up, z=forward), sino que cada uno puede tener valores en las 3 coordenadas a la vez (con la magnitud siendo 1).
         //Usando el transform.up y el transform.right ademas del forward de antes para conseguir los vertices logro tener las posiciones relativas al objeto, no del ambito global
-        nearUpLeftV.x = nearCenter.x + (up.x * nearPlaneHeight / 2) - (right.x * nearPlaneWidth / 2);
-        nearUpLeftV.y = nearCenter.y + (up.y * nearPlaneHeight / 2) - (right.y * nearPlaneWidth / 2);
-        nearUpLeftV.z = nearCenter.z + (up.z * nearPlaneHeight / 2) - (right.z * nearPlaneWidth / 2);
+        
+        //nearUpLeftV.x = nearCenter.x + (up.x * nearPlaneHeight / 2) - (right.x * nearPlaneWidth / 2);
+        //nearUpLeftV.y = nearCenter.y + (up.y * nearPlaneHeight / 2) - (right.y * nearPlaneWidth / 2);
+        //nearUpLeftV.z = nearCenter.z + (up.z * nearPlaneHeight / 2) - (right.z * nearPlaneWidth / 2);
 
-        nearUpRightV.x = nearCenter.x + (up.x * nearPlaneHeight / 2) + (right.x * nearPlaneWidth / 2);
-        nearUpRightV.y = nearCenter.y + (up.y * nearPlaneHeight / 2) + (right.y * nearPlaneWidth / 2);
-        nearUpRightV.z = nearCenter.z + (up.z * nearPlaneHeight / 2) + (right.z * nearPlaneWidth / 2);
+        nearUpLeftV = nearCenter + (up * nearPlaneHeight / 2) - (right * nearPlaneWidth / 2);
 
-        nearDownLeftV.x = nearCenter.x - (up.x * nearPlaneHeight / 2) - (right.x * nearPlaneWidth / 2);
-        nearDownLeftV.y = nearCenter.y - (up.y * nearPlaneHeight / 2) - (right.y * nearPlaneWidth / 2);
-        nearDownLeftV.z = nearCenter.z - (up.z * nearPlaneHeight / 2) - (right.z * nearPlaneWidth / 2);
+        //nearUpRightV.x = nearCenter.x + (up.x * nearPlaneHeight / 2) + (right.x * nearPlaneWidth / 2);
+        //nearUpRightV.y = nearCenter.y + (up.y * nearPlaneHeight / 2) + (right.y * nearPlaneWidth / 2);
+        //nearUpRightV.z = nearCenter.z + (up.z * nearPlaneHeight / 2) + (right.z * nearPlaneWidth / 2);
 
-        nearDownRightV.x = nearCenter.x - (up.x * nearPlaneHeight / 2) + (right.x * nearPlaneWidth / 2);
-        nearDownRightV.y = nearCenter.y - (up.y * nearPlaneHeight / 2) + (right.y * nearPlaneWidth / 2);
-        nearDownRightV.z = nearCenter.z - (up.z * nearPlaneHeight / 2) + (right.z * nearPlaneWidth / 2);
+        nearUpRightV = nearCenter + (up * nearPlaneHeight / 2) + (right * nearPlaneWidth / 2);
 
-        farUpLeftV.x = farCenter.x + (up.x * farPlaneHeight / 2) - (right.x * farPlaneWidth / 2);
-        farUpLeftV.y = farCenter.y + (up.y * farPlaneHeight / 2) - (right.y * farPlaneWidth / 2);
-        farUpLeftV.z = farCenter.z + (up.z * farPlaneHeight / 2) - (right.z * farPlaneWidth / 2);
+        //nearDownLeftV.x = nearCenter.x - (up.x * nearPlaneHeight / 2) - (right.x * nearPlaneWidth / 2);
+        //nearDownLeftV.y = nearCenter.y - (up.y * nearPlaneHeight / 2) - (right.y * nearPlaneWidth / 2);
+        //nearDownLeftV.z = nearCenter.z - (up.z * nearPlaneHeight / 2) - (right.z * nearPlaneWidth / 2);
 
-        farUpRightV.x = farCenter.x + (up.x * farPlaneHeight / 2) + (right.x * farPlaneWidth / 2);
-        farUpRightV.y = farCenter.y + (up.y * farPlaneHeight / 2) + (right.y * farPlaneWidth / 2);
-        farUpRightV.z = farCenter.z + (up.z * farPlaneHeight / 2) + (right.z * farPlaneWidth / 2);
+        nearDownLeftV = nearCenter - (up * nearPlaneHeight / 2) - (right * nearPlaneWidth / 2);
 
-        farDownLeftV.x = farCenter.x - (up.x * farPlaneHeight / 2) - (right.x * farPlaneWidth / 2);
-        farDownLeftV.y = farCenter.y - (up.y * farPlaneHeight / 2) - (right.y * farPlaneWidth / 2);
-        farDownLeftV.z = farCenter.z - (up.z * farPlaneHeight / 2) - (right.z * farPlaneWidth / 2);
+        //nearDownRightV.x = nearCenter.x - (up.x * nearPlaneHeight / 2) + (right.x * nearPlaneWidth / 2);
+        //nearDownRightV.y = nearCenter.y - (up.y * nearPlaneHeight / 2) + (right.y * nearPlaneWidth / 2);
+        //nearDownRightV.z = nearCenter.z - (up.z * nearPlaneHeight / 2) + (right.z * nearPlaneWidth / 2);
 
-        farDownRightV.x = farCenter.x - (up.x * farPlaneHeight / 2) + (right.x * farPlaneWidth / 2);
-        farDownRightV.y = farCenter.y - (up.y * farPlaneHeight / 2) + (right.y * farPlaneWidth / 2);
-        farDownRightV.z = farCenter.z - (up.z * farPlaneHeight / 2) + (right.z * farPlaneWidth / 2);
+        nearDownRightV = nearCenter - (up * nearPlaneHeight / 2) + (right * nearPlaneWidth / 2);
+
+        //farUpLeftV.x = farCenter.x + (up.x * farPlaneHeight / 2) - (right.x * farPlaneWidth / 2);
+        //farUpLeftV.y = farCenter.y + (up.y * farPlaneHeight / 2) - (right.y * farPlaneWidth / 2);
+        //farUpLeftV.z = farCenter.z + (up.z * farPlaneHeight / 2) - (right.z * farPlaneWidth / 2);
+
+        farUpLeftV = farCenter + (up * farPlaneHeight / 2) - (right * farPlaneWidth / 2);
+
+        //farUpRightV.x = farCenter.x + (up.x * farPlaneHeight / 2) + (right.x * farPlaneWidth / 2);
+        //farUpRightV.y = farCenter.y + (up.y * farPlaneHeight / 2) + (right.y * farPlaneWidth / 2);
+        //farUpRightV.z = farCenter.z + (up.z * farPlaneHeight / 2) + (right.z * farPlaneWidth / 2);
+
+        farUpRightV = farCenter + (up * farPlaneHeight / 2) + (right * farPlaneWidth / 2);
+
+        //farDownLeftV.x = farCenter.x - (up.x * farPlaneHeight / 2) - (right.x * farPlaneWidth / 2);
+        //farDownLeftV.y = farCenter.y - (up.y * farPlaneHeight / 2) - (right.y * farPlaneWidth / 2);
+        //farDownLeftV.z = farCenter.z - (up.z * farPlaneHeight / 2) - (right.z * farPlaneWidth / 2);
+
+        farDownLeftV = farCenter - (up * farPlaneHeight / 2) - (right * farPlaneWidth / 2);
+
+        //farDownRightV.x = farCenter.x - (up.x * farPlaneHeight / 2) + (right.x * farPlaneWidth / 2);
+        //farDownRightV.y = farCenter.y - (up.y * farPlaneHeight / 2) + (right.y * farPlaneWidth / 2);
+        //farDownRightV.z = farCenter.z - (up.z * farPlaneHeight / 2) + (right.z * farPlaneWidth / 2);
+
+        farDownRightV = farCenter - (up * farPlaneHeight / 2) + (right * farPlaneWidth / 2);
     }
 
     void AddVerticesToList()
